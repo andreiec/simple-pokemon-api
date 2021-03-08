@@ -18,7 +18,10 @@ def get_pokemons():
 
 @app.route('/pokemons/<int:id>', methods=['GET'])
 def get_pokemon_by_id(id):
-    return jsonify({'Pokemon': data_pokemons[id]})
+    try:
+        return jsonify({'Pokemon': data_pokemons[id]})
+    except IndexError:
+        return "No such pokemon with that id"
 
 
 @app.route('/pokemons/<string:name>', methods=['GET'])
