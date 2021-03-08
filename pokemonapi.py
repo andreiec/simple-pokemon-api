@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, json
+from flask import Flask, jsonify, json, abort
 
 app = Flask(__name__)
 
@@ -21,7 +21,7 @@ def get_pokemon_by_id(id):
     try:
         return jsonify({'Pokemon': data_pokemons[id - 1]})
     except IndexError:
-        return "No such pokemon with that id"
+        abort(400, "No pokemon with that id!")
 
 
 @app.route('/pokemons/<string:name>', methods=['GET'])
@@ -31,7 +31,7 @@ def get_pokemon_by_name(name):
         if name in pokemon['name'].values():
             return jsonify({'Pokemon': pokemon})
 
-    return "No pokemon with that name!"
+    abort(400, "No pokemon with that name!")
 
 
 @app.route('/types/', methods=['GET'])
@@ -66,7 +66,7 @@ def get_pokemons_sorted(prop):
         pokemons.sort(key=lambda p: p['base'][prop])
         return jsonify({'Pokemons': pokemons})
     except KeyError:
-        return "Property not found in pokedex!"
+        abort(400, "Property not found in pokedex!")
 
 
 @app.route('/pokemons/sorted/<string:prop>/Reversed/', methods=['GET'])
@@ -86,7 +86,7 @@ def get_pokemons_sorted_reversed(prop):
         pokemons.sort(key=lambda p: p['base'][prop], reverse=True)
         return jsonify({'Pokemons': pokemons})
     except KeyError:
-        return "Property not found in pokedex!"
+        abort(400, "Property not found in pokedex!")
 
 
 @app.errorhandler(404)
